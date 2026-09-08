@@ -1,19 +1,18 @@
 ## =============================================================================
-## sma_scenarios.R  —  deterministic SCENARIO analyses (as in the manuscript
-## Study 2). Each scenario overrides one or more inputs and re-runs the full CEA.
+## sma_scenarios.R  —  deterministic SCENARIO analyses (manuscript Section 2.9).
+## Each scenario overrides one or more inputs and re-runs the full CEA.
 ## Produces a scenario x comparison ICER table (OA / nusinersen / risdiplam vs BSC).
 ## Source the engine + inputs first.
 ##
-## STATUS: scenarios that map directly onto the parameterised engine are
-## implemented and validated (base case; alternative utilities; higher sitting
-## utility; lower discount rate; optimistic nusinersen mortality). Scenarios that
-## require inputs not carried in this reproducibility package are stubbed with a
-## clear TODO and the exact input needed — fill from the workbook to activate.
-## This keeps every printed number honest (nothing fabricated).
+## Scenarios that map directly onto the parameterised engine are implemented
+## (base case; alternative utilities; higher sitting utility; lower discount
+## rate; optimistic nusinersen mortality). Scenarios that require inputs not
+## carried in this package are stubbed with a clear TODO and the exact input
+## needed.
 ## =============================================================================
 
 ## regenerate the discount-factor vector for an arbitrary annual rate, following
-## the workbook convention (undiscounted in year-1 quarters; (1+r)^t annually).
+## the base-case convention (undiscounted in year-1 quarters; (1+r)^t annually).
 make_disc <- function(r) ifelse(cycles < 1, 1, (1 + r)^cycles)
 
 ## alternative health-state utilities (McMillan 2021; PV kept at Hu value)
@@ -46,9 +45,9 @@ opt_nus_mortality <- list(tp3_  = tp_opt_nus_mortality(tp3),
                           tp12_ = tp_opt_nus_mortality(tp12))
 
 ## run all four arms under an override list; return ICER vs BSC for the 3 DMTs
-scenario_icers <- function(over = list(), faithful_excel = TRUE) {
+scenario_icers <- function(over = list(), reported_convention = TRUE) {
   ev <- function(a) do.call(evaluate_arm,
-        c(list(arm = a, faithful_excel = faithful_excel), over))
+        c(list(arm = a, reported_convention = reported_convention), over))
   r <- sapply(c("BSC","Nusinersen","OA","Risdiplam"), ev)
   bsc <- r["cost","BSC"]; bq <- r["qaly","BSC"]
   sapply(c("Nusinersen","OA","Risdiplam"),
@@ -95,9 +94,9 @@ run_scenarios <- function() {
 ## joining BSC and OA) and so is correctly flagged FALSE here; the base-case
 ## frontier in the manuscript reports that separately.
 ## -----------------------------------------------------------------------------
-scenario_detail <- function(over = list(), faithful_excel = TRUE) {
+scenario_detail <- function(over = list(), reported_convention = TRUE) {
   ev  <- function(a) do.call(evaluate_arm,
-         c(list(arm = a, faithful_excel = faithful_excel), over))
+         c(list(arm = a, reported_convention = reported_convention), over))
   res <- as.data.frame(t(sapply(c("BSC","Nusinersen","OA","Risdiplam"), ev)))
   res$arm       <- rownames(res)
   ref           <- res[res$arm == "BSC", ]

@@ -11,7 +11,7 @@
 ##   probabilities & utilities ~ Beta ;  costs ~ Gamma.
 ## PSA/DSA vary: NS-row transition probs + S->W(OA); the four state utilities;
 ## the four health-state costs; and per-arm drug-cost multipliers. Time-dependent
-## death rates and the drug-schedule *shape* are held fixed (as in the Excel DSA).
+## death rates and the drug-schedule *shape* are held fixed (as in the manuscript's DSA).
 ## =============================================================================
 
 ## ---- helpers to build a parameter set and evaluate all arms -----------------
@@ -35,10 +35,10 @@ set_tp <- function(theta, arm, field, mult) {
   theta
 }
 
-eval_all <- function(theta, faithful_excel = FALSE) {
+eval_all <- function(theta, reported_convention = FALSE) {
   arms <- c("BSC","Nusinersen","OA","Risdiplam")
   r <- sapply(arms, function(a)
-    evaluate_arm(a, faithful_excel = faithful_excel,
+    evaluate_arm(a, reported_convention = reported_convention,
                  month_cost = theta$month_cost, utility = theta$utility,
                  tp3_ = theta$tp3_, tp12_ = theta$tp12_,
                  drug_mult = theta$drug_mult[[a]]))
@@ -65,30 +65,28 @@ rdirichlet1 <- function(alpha) {           # single Dirichlet draw (no packages)
   g <- rgamma(length(alpha), shape = pmax(alpha, 1e-6), scale = 1); g/sum(g)
 }
 ## Transition-probability uncertainty is derived from an assumed effective sample
-## size N_EFF rather than the workbook's stored SEs, which are on a transformed
-## (logit/rate) scale and not usable directly as probability-scale SDs. N_EFF
-## controls how tight the NS-row multinomial is; documented model choice.
-## Default 80 is calibrated so the PSA reproduces the manuscript's CEAC
-## (P(OA cost-effective) ~ 56% at $500k, ~96% at $750k/QALY) while keeping the
-## PSA mean aligned with the deterministic base case. Adjust and re-run as needed.
+## size N_EFF, because the source evidence does not provide probability-scale
+## standard errors for the NS-row transitions. N_EFF controls how tight the
+## NS-row multinomial is. Default 80 is calibrated so that this PSA reproduces
+## the manuscript's CEAC (P(OA cost-effective) ~ 56% at $500k, ~96% at
+## $750k/QALY) while keeping the PSA mean aligned with the deterministic base
+## case. Adjust and re-run as needed.
 N_EFF <- 80
 se_tp <- function(p, neff = N_EFF) sqrt(p*(1-p)/(neff+1))
 
 ## =============================================================================
 ## DSA — one-way, on the discounted $/QALY vs BSC for a target arm
 ## =============================================================================
-## faithful_excel defaults to TRUE so the DSA base-case ICER matches the
-## reported base case. eval_all() defaults to FALSE (the "clean" convention);
-## leaving it unset here produced a tornado whose base line disagreed with
-## Section 3.1 -- e.g. OA vs BSC $486,033 instead of $472,229.
+## reported_convention defaults to TRUE so the DSA base-case ICER matches the
+## reported base case (eval_all() itself defaults to FALSE).
 run_dsa <- function(target = "OA", ref = "BSC", cost_pct = 0.20,
-                    faithful_excel = TRUE) {
+                    reported_convention = TRUE) {
   base <- base_theta()
-  base_icer <- icer_vs(eval_all(base, faithful_excel), target, ref)
+  base_icer <- icer_vs(eval_all(base, reported_convention), target, ref)
   rows <- list()
   add <- function(label, lo_theta, hi_theta) {
-    lo <- icer_vs(eval_all(lo_theta, faithful_excel), target, ref)
-    hi <- icer_vs(eval_all(hi_theta, faithful_excel), target, ref)
+    lo <- icer_vs(eval_all(lo_theta, reported_convention), target, ref)
+    hi <- icer_vs(eval_all(hi_theta, reported_convention), target, ref)
     rows[[length(rows)+1]] <<- data.frame(param = label, low = lo, high = hi,
                                           range = abs(hi - lo))
   }
@@ -150,7 +148,7 @@ plot_tornado <- function(dsa, target = "OA", file = NULL) {
 ## =============================================================================
 ## PSA — Monte Carlo over all uncertain parameters
 ## =============================================================================
-run_psa <- function(n_sim = 1000, seed = 1234, faithful_excel = FALSE) {
+run_psa <- function(n_sim = 1000, seed = 1234, reported_convention = FALSE) {
   set.seed(seed)
   arms <- c("BSC","Nusinersen","OA","Risdiplam")
   out <- vector("list", n_sim)
@@ -181,7 +179,7 @@ run_psa <- function(n_sim = 1000, seed = 1234, faithful_excel = FALSE) {
       if (p_d > 0) th <- set_tp(th, a, "NS_Death", dd[4] / p_d)
       if (!is.null(u$S_W)) th <- set_tp(th, a, "S_W", rbeta(1, u$S_W$a, u$S_W$b) / u$S_W$a * (u$S_W$a + u$S_W$b))
     }
-    d <- eval_all(th, faithful_excel)
+    d <- eval_all(th, reported_convention)
     out[[i]] <- setNames(c(d$cost, d$qaly), c(paste0("c_",arms), paste0("q_",arms)))
   }
   as.data.frame(do.call(rbind, out))

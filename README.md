@@ -35,7 +35,7 @@ still produced and the figures are skipped.
 | `sma_dsa_supplement.R` | Three-panel tornado figure and the underlying table (`dsa_results.csv`) for the supplement. |
 | `sma_figures_gg.R`, `sma_figures_structure_frontier.R`, `sma_figures_mono.R` | Figure functions (ggplot2). `sma_figures_mono.R` provides the greyscale versions used in the manuscript. |
 | `run_and_validate.R`, `make_figures.R` | Stand-alone drivers for the base-case CEA and the figures, respectively (both are also called by `RUN.R`). |
-| `psa_excel_draws.csv` | The 1,000 probabilistic draws (cost and QALYs per arm) used for the manuscript's acceptability curves and cost-effectiveness plane. |
+| `psa_draws.csv` | The 1,000 probabilistic draws (cost and QALYs per arm) used for the manuscript's acceptability curves and cost-effectiveness plane. |
 | `dsa_results.csv` | One-way sensitivity analysis results (all three DMTs versus BSC). |
 | `figs/` | Generated figures (PDF and PNG). |
 
@@ -61,8 +61,8 @@ distributions are given in Table 1 of the manuscript; see the header comments in
   ±1.96 standard errors. Output: `figs/figS1_tornado_panels`, `dsa_results.csv`.
 - **Probabilistic**: the manuscript's acceptability curves (Figure 2) and
   cost-effectiveness plane (Supplementary Figure S2) are drawn from the 1,000
-  draws in `psa_excel_draws.csv` (`fig_ceac_manuscript()`,
-  `fig_ce_plane(read_excel_psa())`). `run_psa()` regenerates a PSA from the
+  draws in `psa_draws.csv` (`fig_ceac_manuscript()`,
+  `fig_ce_plane(read_psa_draws())`). `run_psa()` regenerates a PSA from the
   distributions in `sma_uncertainty.R`: utilities ~ Beta, costs ~ Gamma,
   non-sitting-row transition probabilities ~ Dirichlet, sitting → walking (OA) ~
   Beta, with transition uncertainty governed by an assumed effective sample size

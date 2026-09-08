@@ -1,7 +1,7 @@
 ## =============================================================================
 ## run_and_validate.R
-## Driver: runs the four-arm CEA and checks it against the original Excel
-## workbook's reported outputs (CEA Results sheet, discounted, per patient).
+## Driver: runs the four-arm CEA and checks it against the base-case values
+## reported in the manuscript (Table 2; discounted, per patient).
 ## Usage:  Rscript run_and_validate.R      (from the R model/ directory)
 ## =============================================================================
 here <- tryCatch(dirname(sub("^--file=", "",
@@ -15,14 +15,14 @@ cat("Cycles:", length(cycles), " (t = 0 .. ", max(cycles), " years)\n", sep = ""
 cat("Cohort:", cohort_n, "   Discount:", disc_rate, "\n\n")
 
 ## ---- Four-arm cost-effectiveness (base case, lifetime, discounted) ----------
-cea <- run_cea(faithful_excel = TRUE)
+cea <- run_cea(reported_convention = TRUE)
 cat("=== Four-arm CEA (per patient, discounted, lifetime) ===\n")
 print(within(cea, {
   cost <- round(cost); ly <- round(ly, 3); vfly <- round(vfly, 3); qaly <- round(qaly, 4)
   icer_qaly <- round(icer_qaly); icer_ly <- round(icer_ly); icer_vfly <- round(icer_vfly)
 }), row.names = FALSE)
 
-## ---- Validation against Excel "CEA Results" (discounted, per patient) -------
+## ---- Check against reported base-case values (discounted, per patient) -----
 target <- data.frame(
   arm  = c("BSC","Nusinersen","OA","Risdiplam"),
   cost = c(1631085.77, 4676905.35, 4793785.89, 7487473.87),
@@ -32,22 +32,22 @@ target <- data.frame(
   icer_qaly = c(NA, 2045037.87, 472176.83, 1006141.81)
 )
 
-cat("\n=== Validation vs Excel workbook (relative error) ===\n")
-m <- merge(cea, target, by = "arm", suffixes = c("", "_xl"))
+cat("\n=== Check against reported base-case values (relative error) ===\n")
+m <- merge(cea, target, by = "arm", suffixes = c("", "_ref"))
 m <- m[match(target$arm, m$arm), ]
 relerr <- function(a, b) ifelse(is.na(b) | b == 0, NA, abs(a - b) / abs(b))
 val <- data.frame(
   arm       = m$arm,
-  cost_relerr = signif(relerr(m$cost, m$cost_xl), 3),
-  qaly_relerr = signif(relerr(m$qaly, m$qaly_xl), 3),
-  ly_relerr   = signif(relerr(m$ly,   m$ly_xl),   3),
-  vfly_relerr = signif(relerr(m$vfly, m$vfly_xl), 3),
-  icer_relerr = signif(relerr(m$icer_qaly, m$icer_qaly_xl), 3)
+  cost_relerr = signif(relerr(m$cost, m$cost_ref), 3),
+  qaly_relerr = signif(relerr(m$qaly, m$qaly_ref), 3),
+  ly_relerr   = signif(relerr(m$ly,   m$ly_ref),   3),
+  vfly_relerr = signif(relerr(m$vfly, m$vfly_ref), 3),
+  icer_relerr = signif(relerr(m$icer_qaly, m$icer_qaly_ref), 3)
 )
 print(val, row.names = FALSE)
 worst <- max(val[, -1], na.rm = TRUE)
 cat(sprintf("\nWorst relative error across all reported outputs: %.3g\n", worst))
-cat(if (worst < 0.002) "PASS: replicates Excel to <0.2%.\n" else "CHECK: exceeds 0.2% tolerance.\n")
+cat(if (worst < 0.002) "PASS: reproduces the reported values to <0.2%.\n" else "CHECK: exceeds 0.2% tolerance.\n")
 
 ## ---- Outcomes-based payment for OA (illustrative) ---------------------------
 cat("\n=== OA outcomes-based contract: effective per-patient drug cost ===\n")

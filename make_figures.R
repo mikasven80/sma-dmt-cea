@@ -22,7 +22,7 @@ save_fig(fig_tornado(dsa_oa, "OA"), "tornado_OA", w = 8, h = 5.2, dir = figdir)
 
 ## ---- PSA / CE plane + CEAC --------------------------------------------------
 cat("PSA (", n_sim, " sims)...\n", sep = "")
-set.seed(1234); psa <- run_psa(n_sim, faithful_excel = TRUE)
+set.seed(1234); psa <- run_psa(n_sim, reported_convention = TRUE)
 save_fig(fig_ce_plane(psa, wtp = 5e5), "ce_plane", w = 7, h = 6, dir = figdir)
 save_fig(fig_ceac(psa),                "ceac",     w = 7, h = 5, dir = figdir)
 

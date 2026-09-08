@@ -1,5 +1,4 @@
-## AUTO-GENERATED uncertainty inputs (DSA ranges + PSA distributions)
-## Source: SMA Excel Model.xlsm (Utility, Costs, TP sheets). Regenerate; do not hand-edit.
+## Uncertainty inputs (DSA ranges + PSA distributions); sources: manuscript Table 1.
 
 ## Utilities ~ Beta(alpha,beta)
 util_beta <- list(

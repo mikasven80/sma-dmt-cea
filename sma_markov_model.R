@@ -4,12 +4,8 @@
 ## Onasemnogene abeparvovec (OA) vs nusinersen, risdiplam, and best supportive care
 ## US third-party payer perspective; lifetime horizon; 2024 USD.
 ##
-## This is an independent R re-implementation of the original Excel workbook
-## (SMA Excel Model.xlsm, S. Abuloha), written for transparency and
-## reproducibility. It reproduces the workbook's per-arm discounted cost, LY,
-## VFLY (ventilation-free life-years), and QALY, and the resulting ICERs, to
-## within rounding. See validate_against_excel.R for the automated check and
-## README.md for the model description and known Excel quirks reproduced here.
+## Computes per-arm discounted cost, LY, VFLY (ventilation-free life-years),
+## and QALY, and the resulting ICERs. See README.md for the model description.
 ##
 ## States: NS = non-sitting (entry, ~SMA type 1); S = sitting (~type 2);
 ##         W = walking (~type 3); PV = permanent ventilation; Death.
@@ -30,7 +26,7 @@ if (!exists("cycles"))
 ## -----------------------------------------------------------------------------
 ## run_trace(): build the cohort state-occupancy trace for one arm.
 ##
-## Convention (mirrors the Excel workbook exactly):
+## Convention:
 ##  * Cohort of `cohort_n` infants all start in NS at cycle 0.
 ##  * Cycle length is 3 months during year 1 (cycles 0.25/0.5/0.75/1), annual
 ##    thereafter. Year-1 quarters use the 3-month TP set (tp3); annual cycles
@@ -76,23 +72,21 @@ run_trace <- function(arm, tp3_ = tp3, tp12_ = tp12, durability = Inf) {
 ## -----------------------------------------------------------------------------
 ## evaluate_arm(): compute per-patient discounted cost, LY, VFLY (=EFLY), QALY.
 ##
-## Excel conventions reproduced (see README "Known quirks"):
-##  Q1. Cost uses a 12-month multiplier from cycle 1 onward but only 3 months in
+## Conventions used for the reported results (reported_convention = TRUE):
+##  C1. Cost uses a 12-month multiplier from cycle 1 onward but only 3 months in
 ##      the year-1 quarters (cycles < 1). Life-years use a 0.25 weight at cycle 1
-##      and 1.0 thereafter. (Cost and LY thus treat cycle 1 differently; kept for
-##      exact fidelity to the workbook.)
-##  Q2. Costs are discounted with the SAME-cycle factor disc_factor[k]; health
-##      outcomes (LY/VFLY/QALY) are discounted with the PRIOR-cycle factor
-##      disc_factor[k-1] (discounting-at-cycle-start lag in the workbook).
-##  Q3. Drug cost accrues to living NON-PV patients (NS+S+W) times a per-patient
+##      and 1.0 thereafter.
+##  C2. Costs are discounted with the same-cycle factor disc_factor[k]; health
+##      outcomes (LY/VFLY/QALY) are discounted with the prior-cycle factor
+##      disc_factor[k-1] (discounting at cycle start).
+##  C3. Drug cost accrues to living non-PV patients (NS+S+W) times a per-patient
 ##      schedule; PV patients incur no drug cost. Health-state (disease) cost
 ##      accrues to all living including PV.
-## Set faithful_excel = FALSE to use a single, internally consistent convention
-## (same-cycle discounting for all; 3-month cost + 0.25 LY at cycle 1). This
-## departs slightly from the Excel totals but is the recommended base for a
-## clean published model.
+## Set reported_convention = FALSE to use a single, internally consistent
+## convention (same-cycle discounting for all; 3-month cost + 0.25 LY at
+## cycle 1); ICERs then differ from the reported ones by well under 1%.
 ## -----------------------------------------------------------------------------
-evaluate_arm <- function(arm, faithful_excel = TRUE,
+evaluate_arm <- function(arm, reported_convention = TRUE,
                          month_cost = state_month_cost, utility = state_utility,
                          tp3_ = tp3, tp12_ = tp12, drug_mult = 1,
                          durability = Inf, drug_override = NULL,
@@ -107,7 +101,7 @@ evaluate_arm <- function(arm, faithful_excel = TRUE,
   tot <- c(cost = 0, ly = 0, vfly = 0, qaly = 0)
   for (k in 1:n) {
     c_t <- cycles[k]
-    if (faithful_excel) {
+    if (reported_convention) {
       months  <- if (c_t < 1) 3 else 12
       y_wt    <- if (c_t == 0) 0 else if (c_t <= 1) 0.25 else 1.0
       df_cost <- disc_[k]
@@ -141,8 +135,8 @@ evaluate_arm <- function(arm, faithful_excel = TRUE,
 ## run_cea(): evaluate all arms and build the incremental table vs a reference.
 ## -----------------------------------------------------------------------------
 run_cea <- function(arms = c("BSC","Nusinersen","OA","Risdiplam"),
-                    reference = "BSC", faithful_excel = TRUE) {
-  res <- t(sapply(arms, evaluate_arm, faithful_excel = faithful_excel))
+                    reference = "BSC", reported_convention = TRUE) {
+  res <- t(sapply(arms, evaluate_arm, reported_convention = reported_convention))
   res <- as.data.frame(res)
   res$arm <- rownames(res)
   ref <- res[res$arm == reference, ]

@@ -87,7 +87,7 @@ fig_model_structure <- function() {
 }
 
 ## ---- Figure 2: two-panel CEAC ----------------------------------------------
-fig_ceac_manuscript <- function(psa = read_excel_psa(),
+fig_ceac_manuscript <- function(psa = read_psa_draws(),
                                 wtp_grid = seq(0, 1e6, 5000), ref_wtp = 2e5) {
   all_arms <- c("BSC", "Nusinersen", "OA", "Risdiplam")
   dmts     <- c("Nusinersen", "OA", "Risdiplam")
@@ -196,7 +196,7 @@ fig_ce_plane <- function(psa, arms = c("Nusinersen", "OA", "Risdiplam"), wtp = 5
     guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2.2)))
 }
 
-## ---- supplement: single-panel CEAC (R-port PSA) ----------------------------
+## ---- supplement: single-panel CEAC (regenerated PSA) ----------------------------
 fig_ceac <- function(psa, arms = c("BSC", "Nusinersen", "OA", "Risdiplam"),
                      wtp_grid = seq(0, 1e6, 20000)) {
   df <- ceac_df(psa, arms, "x", wtp_grid)

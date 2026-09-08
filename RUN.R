@@ -27,9 +27,9 @@ for (f in c("sma_inputs.R", "sma_uncertainty.R", "sma_markov_model.R",
             "sma_dsa_psa.R", "sma_obm_durability.R", "sma_scenarios.R"))
   source(file.path(here, f))
 
-## ---- 2. Base-case CEA + validation vs the Excel workbook --------------------
-rule("1. Base-case four-arm CEA (per patient, discounted) + validation vs Excel")
-cea <- run_cea(faithful_excel = TRUE)
+## ---- 2. Base-case CEA + check against reported values ----------------------
+rule("1. Base-case four-arm CEA (per patient, discounted) + check vs reported values")
+cea <- run_cea(reported_convention = TRUE)
 print(within(cea, { cost <- round(cost); ly <- round(ly, 3); vfly <- round(vfly, 3)
   qaly <- round(qaly, 4); icer_qaly <- round(icer_qaly)
   icer_ly <- round(icer_ly); icer_vfly <- round(icer_vfly) }), row.names = FALSE)
@@ -39,10 +39,10 @@ target <- data.frame(
   cost = c(1631085.77, 4676905.35, 4793785.89, 7487473.87),
   qaly = c(0.67162, 2.161, 7.3697, 6.4923),
   icer = c(NA, 2045037.87, 472176.83, 1006141.81))
-m <- merge(cea, target, by = "arm", suffixes = c("", "_xl"))
-worst <- max(abs(m$cost - m$cost_xl)/m$cost_xl,
-             abs(m$qaly - m$qaly_xl)/m$qaly_xl, na.rm = TRUE)
-cat(sprintf("\nValidation: worst relative error vs Excel = %.3g  -> %s\n",
+m <- merge(cea, target, by = "arm", suffixes = c("", "_ref"))
+worst <- max(abs(m$cost - m$cost_ref)/m$cost_ref,
+             abs(m$qaly - m$qaly_ref)/m$qaly_ref, na.rm = TRUE)
+cat(sprintf("\nCheck: worst relative error vs reported base-case values = %.3g  -> %s\n",
             worst, if (worst < 0.002) "PASS (<0.2%)" else "CHECK"))
 
 ## ---- 3. Scenario analyses ---------------------------------------------------
@@ -76,7 +76,7 @@ if (have_gg) {
   source(file.path(here, "sma_dsa_supplement.R"))
   figdir <- file.path(here, "figs"); dir.create(figdir, showWarnings = FALSE)
   dsa <- run_dsa("OA", "BSC")
-  set.seed(1234); psa <- run_psa(n_sim, faithful_excel = TRUE)
+  set.seed(1234); psa <- run_psa(n_sim, reported_convention = TRUE)
   ## main-body figures 1-4
   save_fig(fig_model_structure(),         "fig1_model_structure", 7.6, 4.2, figdir)
   save_fig(fig_ceac_manuscript(),         "fig2_ceac_manuscript", 9.2, 4.4, figdir)

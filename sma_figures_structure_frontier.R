@@ -209,19 +209,16 @@ fig_ceac_panels <- function(psa, wtp_grid = seq(0, 1e6, 10000),
                                           hjust = 0, margin = margin(4, 4, 4, 4)))
 }
 
-## ---- Figure 2 (manuscript): CEAC built from the WORKBOOK's PSA draws --------
-## IMPORTANT: the R port's own run_psa() does NOT reproduce the workbook PSA.
-## Per README, transition uncertainty in the port uses an assumed effective
-## sample size (N_EFF) because the workbook's stored transition SEs are on a
-## transformed scale; N_EFF is a calibrated approximation. Section 3.2 of the
-## manuscript reports the WORKBOOK's PSA, so the manuscript figure is built from
-## the workbook's own 1,000 draws, exported to psa_excel_draws.csv
-## (sheet "PSA", cols BE/BF, BI/BJ, BM/BN, BQ/BR = QALY/Cost per arm).
-## Use fig_ceac_panels() for the R-port PSA; use this for the manuscript.
+## ---- Figure 2 (manuscript): CEAC built from the stored PSA draws ------------
+## The manuscript's Figure 2 (and Supplementary Figure S2) are built from the
+## 1,000 stored PSA draws in psa_draws.csv (QALY and cost per arm). run_psa()
+## instead draws a fresh PSA from the distributions in sma_uncertainty.R, with
+## N_EFF as the effective sample size for transition uncertainty; use
+## fig_ceac_panels() for that. Use this function for the manuscript figure.
 
-read_excel_psa <- function(path = "psa_excel_draws.csv") read.csv(path)
+read_psa_draws <- function(path = "psa_draws.csv") read.csv(path)
 
-fig_ceac_manuscript <- function(psa = read_excel_psa(),
+fig_ceac_manuscript <- function(psa = read_psa_draws(),
                                 wtp_grid = seq(0, 1e6, 5000), ref_wtp = 2e5) {
   all_arms <- c("BSC", "Nusinersen", "OA", "Risdiplam")
   dmts     <- c("Nusinersen", "OA", "Risdiplam")

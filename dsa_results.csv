@@ -1,0 +1,43 @@
+"Comparison","Parameter","Base_ICER","ICER_low","ICER_high","Range"
+"Nusinersen vs BSC","Transition: non-sitting to sitting",2045261,1661765,5669488,4007722
+"Nusinersen vs BSC","Utility: sitting",2045261,1600549,2832182,1231634
+"Nusinersen vs BSC","Drug cost: nusinersen",2045261,1707173,2383349,676176
+"Nusinersen vs BSC","Transition: non-sitting to PV",2045261,1871679,2202117,330437
+"Nusinersen vs BSC","Transition: non-sitting to death",2045261,1968837,2133545,164708
+"Nusinersen vs BSC","Health-state cost: sitting",2045261,1998273,2092248,93975
+"Nusinersen vs BSC","Health-state cost: non-sitting",2045261,2011731,2078791,67060
+"Nusinersen vs BSC","Utility: non-sitting",2045261,2014212,2077282,63070
+"Nusinersen vs BSC","Health-state cost: permanent ventilation",2045261,2035708,2054814,19106
+"Nusinersen vs BSC","Utility: permanent ventilation",2045261,2041138,2049400,8262
+"Nusinersen vs BSC","Health-state cost: walking",2045261,2045261,2045261,0
+"Nusinersen vs BSC","Drug cost: onasemnogene abeparvovec",2045261,2045261,2045261,0
+"Nusinersen vs BSC","Drug cost: risdiplam",2045261,2045261,2045261,0
+"Nusinersen vs BSC","Utility: walking",2045261,2045261,2045261,0
+"Onasemnogene abeparvovec vs BSC","Utility: sitting",472229,364337,670908,306572
+"Onasemnogene abeparvovec vs BSC","Transition: non-sitting to sitting",472229,418657,638383,219726
+"Onasemnogene abeparvovec vs BSC","Drug cost: onasemnogene abeparvovec",472229,405901,538558,132657
+"Onasemnogene abeparvovec vs BSC","Health-state cost: sitting",472229,422210,522249,100040
+"Onasemnogene abeparvovec vs BSC","Transition: non-sitting to PV",472229,445528,529343,83815
+"Onasemnogene abeparvovec vs BSC","Health-state cost: permanent ventilation",472229,439091,505368,66276
+"Onasemnogene abeparvovec vs BSC","Transition: non-sitting to death",472229,464442,489522,25080
+"Onasemnogene abeparvovec vs BSC","Health-state cost: non-sitting",472229,461637,482822,21185
+"Onasemnogene abeparvovec vs BSC","Utility: permanent ventilation",472229,465886,478748,12862
+"Onasemnogene abeparvovec vs BSC","Utility: walking",472229,467267,477299,10032
+"Onasemnogene abeparvovec vs BSC","Utility: non-sitting",472229,469812,474672,4860
+"Onasemnogene abeparvovec vs BSC","Health-state cost: walking",472229,471586,472872,1286
+"Onasemnogene abeparvovec vs BSC","Drug cost: nusinersen",472229,472229,472229,0
+"Onasemnogene abeparvovec vs BSC","Drug cost: risdiplam",472229,472229,472229,0
+"Risdiplam vs BSC","Utility: sitting",1006335,767825,1459792,691967
+"Risdiplam vs BSC","Drug cost: risdiplam",1006335,838126,1174544,336418
+"Risdiplam vs BSC","Transition: non-sitting to sitting",1006335,957459,1206799,249340
+"Risdiplam vs BSC","Health-state cost: sitting",1006335,953922,1058748,104827
+"Risdiplam vs BSC","Health-state cost: permanent ventilation",1006335,972273,1040397,68124
+"Risdiplam vs BSC","Transition: non-sitting to death",1006335,976535,1021550,45015
+"Risdiplam vs BSC","Health-state cost: non-sitting",1006335,991628,1021041,29413
+"Risdiplam vs BSC","Utility: permanent ventilation",1006335,992539,1020520,27981
+"Risdiplam vs BSC","Transition: non-sitting to PV",1006335,998101,1020163,22062
+"Risdiplam vs BSC","Utility: non-sitting",1006335,999111,1013664,14554
+"Risdiplam vs BSC","Health-state cost: walking",1006335,1006335,1006335,0
+"Risdiplam vs BSC","Drug cost: nusinersen",1006335,1006335,1006335,0
+"Risdiplam vs BSC","Drug cost: onasemnogene abeparvovec",1006335,1006335,1006335,0
+"Risdiplam vs BSC","Utility: walking",1006335,1006335,1006335,0

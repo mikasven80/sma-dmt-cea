@@ -1,0 +1,11 @@
+# R session artifacts
+.Rhistory
+.RData
+.Rproj.user/
+Rplots.pdf
+
+# OS
+.DS_Store
+
+# Generated figures are regenerable via RUN.R; uncomment to exclude from the repo:
+# figs/

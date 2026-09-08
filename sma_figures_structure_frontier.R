@@ -4,12 +4,12 @@
 ##   fig_ceac_panels()     — Figure 2, two-panel CEAC (vs BSC / excluding BSC)
 ##   fig_frontier()        — cost-effectiveness frontier (supplement)
 ##
-## Replaces the two dissertation-era raster figures with ggplot2 versions in the
+## Provides ggplot2 versions of these figures in the
 ## same theme as the rest of the figure set (sma_figures_gg.R). Source AFTER
 ## sma_figures_gg.R (uses theme_sma(), arm_cols, save_fig(), dollar_k).
 ##
 ## Terminology note: the state is labelled "PV" (permanent ventilation) to match
-## the manuscript. The dissertation figure used "PAV"; that term is not used in
+## the manuscript. An earlier version used "PAV"; that term is not used in
 ## the manuscript and is deliberately not reproduced here.
 ## =============================================================================
 suppressPackageStartupMessages({ library(ggplot2); library(scales) })

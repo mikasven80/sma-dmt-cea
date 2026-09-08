@@ -1,5 +1,5 @@
 ## =============================================================================
-## sma_scenarios.R  —  deterministic SCENARIO analyses (as in the dissertation
+## sma_scenarios.R  —  deterministic SCENARIO analyses (as in the manuscript
 ## Study 2). Each scenario overrides one or more inputs and re-runs the full CEA.
 ## Produces a scenario x comparison ICER table (OA / nusinersen / risdiplam vs BSC).
 ## Source the engine + inputs first.

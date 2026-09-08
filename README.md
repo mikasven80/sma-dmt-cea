@@ -1,5 +1,7 @@
 # Cost-effectiveness of disease-modifying therapies for infantile-onset SMA
 
+[![DOI](https://zenodo.org/badge/1361319766.svg)](https://doi.org/10.5281/zenodo.22659577)
+
 R code for the analysis reported in:
 
 > Abuloha S, Goodin A, Jiao T, Corti M, Svensson M. *Cost-Effectiveness of
@@ -95,5 +97,10 @@ distributions are given in Table 1 of the manuscript; see the header comments in
 
 ## Citation and licence
 Licensed under the MIT License (see `LICENSE`). If you use this code, please
-cite the manuscript above and the archived release of this repository
-(Zenodo DOI to be added on release).
+cite the manuscript above and the archived release of this repository:
+
+> Svensson M, Abuloha S. sma-dmt-cea: Cost-effectiveness model of disease-modifying
+> therapies for infantile-onset SMA (R code). Zenodo. https://doi.org/10.5281/zenodo.22659577
+
+The concept DOI above always resolves to the latest release; each release also
+has its own version DOI on Zenodo.

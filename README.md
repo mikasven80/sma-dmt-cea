@@ -99,7 +99,7 @@ distributions are given in Table 1 of the manuscript; see the header comments in
 Licensed under the MIT License (see `LICENSE`). If you use this code, please
 cite the manuscript above and the archived release of this repository:
 
-> Svensson M, Abuloha S. sma-dmt-cea: Cost-effectiveness model of disease-modifying
+> Abuloha S, Goodin A, Jiao T, Corti M, Svensson M. sma-dmt-cea: Cost-effectiveness model of disease-modifying
 > therapies for infantile-onset SMA (R code). Zenodo. https://doi.org/10.5281/zenodo.22659577
 
 The concept DOI above always resolves to the latest release; each release also
